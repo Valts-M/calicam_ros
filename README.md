@@ -4,7 +4,7 @@ A simple ros2 driver for calicam stereo and monocular cameras. Code is based on 
 
 ## 1. Dependencies
 
-> sduo apt install ros-$ROS_DISTRO-cv-bridge
+> sudo apt install ros-$ROS_DISTRO-cv-bridge
 
 ## 2. How to use
 
