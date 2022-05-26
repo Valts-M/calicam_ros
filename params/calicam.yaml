@@ -1,0 +1,8 @@
+calicam:
+  ros__parameters:
+    calibration_file: ""
+    fov: 100.0
+    fps: 30.0
+    camera_index: 0
+    undistort_rectify: true
+    monochrome: false
