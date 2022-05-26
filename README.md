@@ -1,17 +1,12 @@
 # Calicam_ros
 
----
 A simple ros2 driver for calicam stereo and monocular cameras. Code is based on the official [repo](https://github.com/astar-ai/calicam).
 
 ## 1. Dependencies
 
----
-
 > sduo apt install ros-$ROS_DISTRO-cv-bridge
 
 ## 2. How to use
-
----
 
 **Make sure to add the calibration file path in the paramaters file**
 
@@ -29,10 +24,7 @@ or with specified params file:
 Run without launch:
 > ros2 run calicam_ros calicam --ros-args --params_file */full/path/to/params/file.yaml*
 
-
 ## 3. Paramaters
-
----
 
 Modify the paramaters in the calicam.yaml config file to your needs
 
@@ -49,8 +41,6 @@ You can change the resolution by changing cap_size in the calibration file. Supp
 
 ## 4. Published topics
 
----
-
 | Topic | Type | Description |
 | ----------- | ----------- | ----------- |
 | /calicam/left/camera_info | sensor_msgs/CameraInfo | Information about the left camera like resolution and distortion paramaters |
@@ -63,8 +53,6 @@ You can change the resolution by changing cap_size in the calibration file. Supp
 If using a mono camera only the left camera will be published.
 
 ## 5. Transforms
-
----
 
 ![tf_tree.png](./photos/tf_tree.png)
 
