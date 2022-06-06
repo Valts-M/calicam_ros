@@ -16,6 +16,8 @@ CaliCam::CaliCam() : Node("calicam")
     cameraIndex = declare_parameter("camera_index", 0);
     monochrome = declare_parameter("monochrome", false);
 
+    cv::setNumThreads(4);
+
     if(calibFile.empty())
     {
         RCLCPP_FATAL(get_logger(), "CALIBRATION FILE PATH IS EMPTY");
@@ -224,11 +226,18 @@ void CaliCam::updateHandler()
 
         if(!undirstortRectify) return;
 
-        rectifier.undistort(lCvBridge.image, lCvBridge.image);
+        rectifier.lUndistort(lCvBridge.image, lCvBridge.image);
         lCvBridge.toImageMsg(lMsg);
         lRectImgPub->publish(lMsg);
     }
 
 }
+}
 
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<calicam::CaliCam>());
+  rclcpp::shutdown();
+  return 0;
 }

@@ -1,6 +1,6 @@
 #include "stereo_rectifier.hpp"
 
-#include <opencv2/imgproc.hpp>
+// #include <opencv2/imgproc.hpp>
 
 namespace calicam {
 
@@ -33,9 +33,14 @@ void StereoRectifier::undistortRectify(const cv::Mat& in_img_l, const cv::Mat& i
   cv::remap(in_img_r, out_img_r, calib.smap[1][0], calib.smap[1][1], cv::InterpolationFlags::INTER_LINEAR);
 }
 
-void StereoRectifier::undistort(const cv::Mat& inImg, cv::Mat& outImg) const
+void StereoRectifier::lUndistort(const cv::Mat& inImg, cv::Mat& outImg) const
 {
   cv::remap(inImg, outImg, calib.smap[0][0], calib.smap[0][1], cv::InterpolationFlags::INTER_LINEAR);
+}
+
+void StereoRectifier::rUndistort(const cv::Mat& inImg, cv::Mat& outImg) const
+{
+  cv::remap(inImg, outImg, calib.smap[1][0], calib.smap[1][1], cv::InterpolationFlags::INTER_LINEAR);
 }
 
 void StereoRectifier::initUndistortRectifyMap(cv::Mat& K, cv::Mat& D, cv::Mat& xi, cv::Mat& R, 

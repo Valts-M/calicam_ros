@@ -1,8 +1,6 @@
-calicam:
+rectifier_node:
   ros__parameters:
     calibration_file: "/home/valts/SlamBox/configs/21-181220-0108.yml"
     fov: 100.0
     fps: 30.0
-    camera_index: 0
-    undistort_rectify: true
     monochrome: false
