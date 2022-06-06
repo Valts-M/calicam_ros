@@ -15,7 +15,8 @@ public:
     void undistortRectify(const cv::Mat& in_img_l, const cv::Mat& in_img_r,
                  cv::Mat& out_img_l, cv::Mat& out_img_r) const;
 
-    void undistort(const cv::Mat& inImg, cv::Mat& outImg) const;
+    void lUndistort(const cv::Mat& inImg, cv::Mat& outImg) const;
+    void rUndistort(const cv::Mat& inImg, cv::Mat& outImg) const;
 
     void updateFOV(double fov);
 

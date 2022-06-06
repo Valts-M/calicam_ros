@@ -8,7 +8,7 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 #include <sensor_msgs/distortion_models.hpp>
-
+#include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
 
 #include "calibration.hpp"

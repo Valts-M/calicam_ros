@@ -28,18 +28,24 @@ include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
 add_library(stereo_rectifier STATIC src/stereo_rectifier.cpp)
 ament_target_dependencies(stereo_rectifier cv_bridge)
 
-add_library(calicam_driver STATIC src/calicam.cpp)
-ament_target_dependencies(calicam_driver rclcpp sensor_msgs cv_bridge tf2_ros geometry_msgs)
-target_link_libraries(calicam_driver stereo_rectifier)
-
-add_executable(calicam src/main.cpp)
-ament_target_dependencies(calicam rclcpp)
+add_executable(calicam src/calicam.cpp)
+ament_target_dependencies(calicam rclcpp sensor_msgs cv_bridge tf2_ros geometry_msgs)
 target_include_directories(calicam PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(calicam calicam_driver)
+target_link_libraries(calicam stereo_rectifier)
 
 install(TARGETS calicam
+  DESTINATION lib/${PROJECT_NAME})
+
+add_executable(rectifier_node src/rectifier_node.cpp)
+ament_target_dependencies(rectifier_node rclcpp sensor_msgs cv_bridge)
+target_include_directories(rectifier_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(rectifier_node stereo_rectifier)
+
+install(TARGETS rectifier_node
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch

@@ -1,0 +1,6 @@
+rectifier_node:
+  ros__parameters:
+    calibration_file: ""
+    fov: 100.0
+    fps: 30.0
+    monochrome: false
