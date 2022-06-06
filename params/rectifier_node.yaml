@@ -1,6 +1,6 @@
 rectifier_node:
   ros__parameters:
-    calibration_file: "/home/valts/SlamBox/configs/21-181220-0108.yml"
+    calibration_file: ""
     fov: 100.0
     fps: 30.0
     monochrome: false
