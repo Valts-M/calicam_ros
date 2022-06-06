@@ -26,7 +26,9 @@ Run without launch:
 
 There is also a rectifier_node to use on recorded bags to rectify raw recorded images. You can run it like so:
 > ros2 launch calicam_ros rectifier_node
+> 
 > ros2 launch calicam_ros rectifier_node params_file:=*/full/path/to/params/file.yaml/*
+> 
 > ros2 run calicam_ros rectifier_node --ros-args --params_file */full/path/to/params/file.yaml*
 
 The calicam and rectifier_node have seperate paramater files.
