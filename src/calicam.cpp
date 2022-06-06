@@ -81,8 +81,8 @@ CaliCam::CaliCam() : Node("calicam")
     lRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/left/image_rect", 10);
     lInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>("calicam/left/camera_info", 10);
 
-    rImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/raw_img", 10);
-    rRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/rect_img", 10);
+    rImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/image_raw", 10);
+    rRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/image_rect", 10);
     rInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>("calicam/right/camera_info", 10);
 
     vCapture.open(cameraIndex);

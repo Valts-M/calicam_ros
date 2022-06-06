@@ -34,8 +34,8 @@ RectifierNode::RectifierNode() : Node("rectifier_node")
     lRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/left/image_rect", 10);
     lImgSub = create_subscription<sensor_msgs::msg::Image>("calicam/left/image_raw", 10, std::bind(&RectifierNode::lImgCallback, this, _1));
 
-    rRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/rect_img", 10);
-    rImgSub = create_subscription<sensor_msgs::msg::Image>("calicam/right/raw_img", 10, std::bind(&RectifierNode::rImgCallback, this, _1));
+    rRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/image_rect", 10);
+    rImgSub = create_subscription<sensor_msgs::msg::Image>("calicam/right/image_raw", 10, std::bind(&RectifierNode::rImgCallback, this, _1));
 
     RCLCPP_INFO(get_logger(), "Starting rectifier node");
 }
