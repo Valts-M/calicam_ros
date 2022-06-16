@@ -10,6 +10,7 @@
 #include <sensor_msgs/distortion_models.hpp>
 #include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <opencv2/videoio.hpp>
 
 #include "calibration.hpp"
 #include "stereo_rectifier.hpp"

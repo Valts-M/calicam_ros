@@ -43,14 +43,14 @@ CaliCam::CaliCam() : Node("calicam")
     lCvBridge.encoding = monochrome ? sensor_msgs::image_encodings::TYPE_8UC1 : sensor_msgs::image_encodings::TYPE_8UC3;
     rCvBridge.encoding = monochrome ? sensor_msgs::image_encodings::TYPE_8UC1 : sensor_msgs::image_encodings::TYPE_8UC3;
 
-    lCvBridge.header.frame_id = "calicam_left";
-    rCvBridge.header.frame_id = "calicam_right";
+    lCvBridge.header.frame_id = std::string(this->get_name()) + "_left";
+    rCvBridge.header.frame_id = std::string(this->get_name()) + "_right";
 
     // publish static transform between sensor frames
     tf_publisher = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
     
     geometry_msgs::msg::TransformStamped leftTf;
-    leftTf.header.frame_id = "calicam";
+    leftTf.header.frame_id = this->get_name();
     leftTf.child_frame_id = lCvBridge.header.frame_id;
     leftTf.header.stamp = now();
     leftTf.transform.rotation.x = 0.5;
@@ -62,7 +62,7 @@ CaliCam::CaliCam() : Node("calicam")
     if(calib.stereo)
     {
         geometry_msgs::msg::TransformStamped rightTf;
-        rightTf.header.frame_id = "calicam";
+        rightTf.header.frame_id = this->get_name();
         rightTf.child_frame_id = rCvBridge.header.frame_id;
         rightTf.header.stamp = leftTf.header.stamp;
         rightTf.transform.rotation.x = 0.5;
@@ -77,15 +77,15 @@ CaliCam::CaliCam() : Node("calicam")
         tf_publisher->sendTransform(rightTf);
     }
 
-    lImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/left/image_raw", 10);
-    lRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/left/image_rect", 10);
-    lInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>("calicam/left/camera_info", 10);
+    lImgPub = create_publisher<sensor_msgs::msg::Image>(std::string(this->get_name()) + "/left/image_raw", 10);
+    lRectImgPub = create_publisher<sensor_msgs::msg::Image>(std::string(this->get_name()) + "/left/image_rect", 10);
+    lInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>(std::string(this->get_name()) + "/left/camera_info", 10);
 
-    rImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/image_raw", 10);
-    rRectImgPub = create_publisher<sensor_msgs::msg::Image>("calicam/right/image_rect", 10);
-    rInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>("calicam/right/camera_info", 10);
+    rImgPub = create_publisher<sensor_msgs::msg::Image>(std::string(this->get_name()) + "/right/image_raw", 10);
+    rRectImgPub = create_publisher<sensor_msgs::msg::Image>(std::string(this->get_name()) + "/right/image_rect", 10);
+    rInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>(std::string(this->get_name()) + "/right/camera_info", 10);
 
-    vCapture.open(cameraIndex);
+    vCapture.open(cameraIndex,  cv::CAP_V4L);
     vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_WIDTH,  calib.capSize.width);
     vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_HEIGHT, calib.capSize.height);
     vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FPS, fps);

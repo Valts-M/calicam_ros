@@ -22,14 +22,15 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(OpenCV REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
 
 add_library(stereo_rectifier STATIC src/stereo_rectifier.cpp)
-ament_target_dependencies(stereo_rectifier cv_bridge)
+ament_target_dependencies(stereo_rectifier cv_bridge OpenCV)
 
 add_executable(calicam src/calicam.cpp)
-ament_target_dependencies(calicam rclcpp sensor_msgs cv_bridge tf2_ros geometry_msgs)
+ament_target_dependencies(calicam rclcpp sensor_msgs cv_bridge tf2_ros geometry_msgs OpenCV)
 target_include_directories(calicam PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
