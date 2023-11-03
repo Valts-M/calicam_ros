@@ -169,7 +169,8 @@ void CaliCam::updateHandler()
 {
     if(!vCapture.isOpened())
     {
-        RCLCPP_ERROR(get_logger(), "CAN'T CONNECTO TO CAMERA %i", cameraIndex);
+        RCLCPP_ERROR(get_logger(), "CAN'T CONNECT TO CAMERA %i, trying %i", cameraIndex, cameraIndex + 1);
+        cameraIndex = (cameraIndex + 1) % 16;
         resetCamera();
         return;
     }
