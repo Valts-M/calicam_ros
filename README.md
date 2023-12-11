@@ -15,12 +15,11 @@ To download the unique calibration file for your camera:
 
 Replace the serial number in the URL with the one on your camera.
 
-To figure out the camera index for your calicam, unplug it if you have it plugged in and run:
-> ls /dev
+Add your user to video group if you want to find the camera index automatically.
+> sudo usermod -a -G video $USER
 
-If you have any other cameras connected to your computer like a webcam they will show up as video sources, take note of them. Then connect the calicam and run the command again. You should see 2 more video sources pop up. The first of those is your calicam and you should use that index.
+The node will try finding the correct index of your calicam. If it fails you will have to [manually specify](#7-Manually-find-camera-index) it in the params file.
 
-![find_camera_index.png](./photos/find_camera_index.png)
 
 Run with launch:
 > ros2 launch calicam_ros calicam
@@ -90,6 +89,15 @@ If using a mono camera only the left camera will be published but both topics wi
 The suffix for each frame is the node name. In this example it is the default node name *calicam*. As an example if the node name is changed to calicam_1 then the three frames would be named as follows: calicam_1, calicam_1_left, calicam_1_right
 
 The calicam frame is in the ros coordinate system (x-forwards, y-left, z-up). It's position is the same as the calicam_left frame. The left and right camera frames are in the camera coordinate frame (z-forwards, x-right, y-down). The calicam frame rotates these frames to the ros coordinate system. If you are using a mono camera then the right frame won't exist.
+
+## 7. Manually find camera index
+
+To figure out the camera index for your calicam, unplug it if you have it plugged in and run:
+> ls /dev
+
+If you have any other cameras connected to your computer like a webcam they will show up as video sources, take note of them. Then connect the calicam and run the command again. You should see 2 more video sources pop up. The first of those is your calicam and you should use that index.
+
+![find_camera_index.png](./photos/find_camera_index.png)
 
 ## TO DO
 
