@@ -168,7 +168,8 @@ void CaliCam::updateHandler()
 {
     if(!vCapture.isOpened())
     {
-        RCLCPP_INFO(get_logger(), "Can't connect to camera %i, trying to find Calicam ", cameraIndex);
+        RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 2000,
+        					 "Can't connect to camera %i, trying to find Calicam ", cameraIndex);
 
         int maxCameras = 64; // Set the maximum number of cameras to search
         for(int i = 0; i < maxCameras; ++i)
@@ -195,8 +196,9 @@ void CaliCam::updateHandler()
         }
 
         // If no calicam is found, log an error or handle accordingly
-        RCLCPP_FATAL(get_logger(), "Calicam not found among available cameras");
-        exit(-1);
+    	RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 2000,
+                         	 "Calicam not found among available cameras. Retrying...");
+   	 	return;
     }
 
 
