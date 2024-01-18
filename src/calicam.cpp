@@ -13,7 +13,7 @@ CaliCam::CaliCam() : Node("calicam")
     fov = declare_parameter("fov", 100.0);
     fps = declare_parameter("fps", 30.0);
     undirstortRectify = declare_parameter("undistort_rectify", false);
-    cameraIndex = declare_parameter("camera_index", 0);
+    cameraIndex = declare_parameter("camera_index", -1);
     monochrome = declare_parameter("monochrome", false);
 
     cv::setNumThreads(4);
@@ -85,10 +85,7 @@ CaliCam::CaliCam() : Node("calicam")
     rRectImgPub = create_publisher<sensor_msgs::msg::Image>(std::string(this->get_name()) + "/right/image_rect", 10);
     rInfoPub = create_publisher<sensor_msgs::msg::CameraInfo>(std::string(this->get_name()) + "/right/camera_info", 10);
 
-    vCapture.open(cameraIndex,  cv::CAP_V4L);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_WIDTH,  calib.capSize.width);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_HEIGHT, calib.capSize.height);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FPS, fps);
+    resetCamera();
 
     timer = create_wall_timer(std::chrono::milliseconds(static_cast<int>(1000 / fps)), std::bind(&CaliCam::updateHandler, this));
     RCLCPP_INFO(get_logger(), "Starting calicam");
@@ -158,21 +155,52 @@ sensor_msgs::msg::CameraInfo CaliCam::generateCameraInfo(const bool leftCamera)
   
 void CaliCam::resetCamera()
 {
-    vCapture.release();
-    vCapture.open(cameraIndex);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_WIDTH,  calib.capSize.width);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_HEIGHT, calib.capSize.height);
-    vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FPS, fps);
+    if (cameraIndex != -1) {
+        vCapture.release();
+        vCapture.open(cameraIndex);
+        vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_WIDTH,  calib.capSize.width);
+        vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FRAME_HEIGHT, calib.capSize.height);
+        vCapture.set(cv::VideoCaptureProperties::CAP_PROP_FPS, fps);
+    }
 }
 
 void CaliCam::updateHandler()
 {
     if(!vCapture.isOpened())
     {
-        RCLCPP_ERROR(get_logger(), "CAN'T CONNECTO TO CAMERA %i", cameraIndex);
-        resetCamera();
-        return;
+        RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 2000,
+        					 "Can't connect to camera %i, trying to find Calicam ", cameraIndex);
+
+        int maxCameras = 64; // Set the maximum number of cameras to search
+        for(int i = 0; i < maxCameras; ++i)
+        {
+            std::string devicePath = "/dev/video" + std::to_string(i);
+            int fd = open(devicePath.c_str(), O_RDONLY);
+            if(fd != -1)
+            {
+                struct v4l2_capability video_cap;
+                if(ioctl(fd, VIDIOC_QUERYCAP, &video_cap) != -1)
+                {
+                    std::string deviceName = reinterpret_cast<char*>(video_cap.card);
+                    if(deviceName.find("PayCam") != std::string::npos)
+                    {
+                        cameraIndex = i;
+                        RCLCPP_INFO(get_logger(), "Found Calicam at index %i", cameraIndex);
+                        close(fd);
+                        resetCamera();
+                        return;
+                    }
+                }
+            }
+            close(fd);
+        }
+
+        // If no calicam is found, log an error or handle accordingly
+    	RCLCPP_WARN_THROTTLE(get_logger(), *this->get_clock(), 2000,
+                         	 "Calicam not found among available cameras. Retrying...");
+   	 	return;
     }
+
 
     vCapture >> latestFrame;
     lCvBridge.header.stamp = now();
